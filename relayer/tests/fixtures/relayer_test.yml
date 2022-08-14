@@ -1,0 +1,59 @@
+field_0:
+  sub_field_0: 1024
+  sub_field_1: 'r3lay3r'
+  sub_field_2:
+    - 'relay0_0'
+    - 'relay0_1'
+    - 'relay0_2'
+
+field_1:
+  sub_field_0:
+    sub_sub_field_0: 'aa'
+    sub_sub_field_1:
+      sub_sub_sub_field_0:
+        - 'relay1_0'
+        - 'relay1_1'
+        - 'relay1_2'
+    dotted.sub.field_2: 'value_to_change'
+    dotted.sub.field_3:
+      dotted.sub_sub_field_0: 'remove_me'
+
+field_2:
+  sub_field_0:
+    - name: 'a'
+      data: 0
+    - name: 'b'
+      data: 0
+    - name: 'c'
+      data: 0
+
+list_field:
+ - name: 'a'
+   data: 0
+ - name: 'b'
+   data:
+     sub_data:
+       - attr: 'sub_a'
+         val: 'sub_val_1'
+       - attr: 'sub_b'
+         val: 'sub_val_2'
+ - name: 'c'
+   data:
+     - attr: 'd'
+       val: 'e'
+     - attr: 'f'
+       val: 'g'
+
+dotted.field:
+  internal_field:
+    - list.item_0.key1: 'value01'
+      list.item_0.key2: 'value02'
+    - list.item_1.key1: 'value11'
+      list.item_1.key2: 3
+
+dont_open_dotted_inside:
+  internal.dotted.field:
+    internal_1:
+      - list_item_0:
+          internal_2:
+            deep.dotted.field: 'orig'

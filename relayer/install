@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import argparse
+import subprocess
+import glob
+
+
+def run(command, cwd=None, quiet=False):
+    print('Running cmd: {0}'.format(command))
+    retcode = subprocess.call(command, cwd=cwd, shell=True, executable='/bin/bash')
+    if retcode:
+        if quiet:
+            print('cmd failed quietly with retcode: {0}'.format(retcode))
+        else:
+            print('cmd retcode: {0}'.format(retcode))
+            sys.exit(1 if retcode else 0)
+
+    return retcode
+
+
+def register_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-o',
+                        '--offline-install-path',
+                        help='The dir path to install pip packages from.')
+
+    return parser.parse_args()
+
+
+args = register_arguments()
+
+local_pip_args = '--no-index --find-links=file:{0}'.format(args.offline_install_path) \
+    if args.offline_install_path is not None else ''
+
+# create venv, activate it and install requirements to it (from a local dir if it exists)
+# "python -m pip install" instead of "pip install" handles a pip issue where it fails in a long-named dir
+run('rm -rf venv')
+
+# offline install
+if args.offline_install_path is not None:
+    run('virtualenv --python=python3 --no-download --no-pip venv')
+    pip_whl_file = glob.glob(os.path.join(args.offline_install_path, '*pip*.whl'))[0]
+    run('source venv/bin/activate && python {0}/pip install pip {1}'.format(pip_whl_file, local_pip_args))
+    run('source venv/bin/activate && python -m pip install {0} incremental'.format(local_pip_args))
+else:
+    run('virtualenv --python=python3 venv')
+
+run('source venv/bin/activate && python -m pip install {0} -r requirements.txt'.format(local_pip_args))
+
+print('Installation complete. Enjoy your relayer!')

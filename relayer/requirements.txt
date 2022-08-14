@@ -1,0 +1,8 @@
+# packages required by the core program
+setuptools==50.3.0
+Twisted==22.1.0
+ruamel.yaml==0.17.21
+six==1.16.0
+simplejson==3.17.6
+colorama==0.4.5
+incremental==21.3.0

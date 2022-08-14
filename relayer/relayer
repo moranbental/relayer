@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+import os
+import string
+import sys
+import subprocess
+
+
+# Copied from pipes.quote() so as not to require it in the global python packages
+def quote(unsafe_string):
+    """
+    Return a shell-escaped version of the unsafe string
+    """
+    safechars = frozenset(string.ascii_letters + string.digits + '@%_-+=:,./')
+
+    for c in unsafe_string:
+        if c not in safechars:
+            break
+    else:
+        if not unsafe_string:
+            return "''"
+        return unsafe_string
+
+    # use single quotes, and put single quotes into double quotes
+    # the string $'b is then quoted as '$'"'"'b'
+    return "'" + unsafe_string.replace("'", "'\"'\"'") + "'"
+
+
+safe_args = ' '.join(quote(arg) for arg in sys.argv[1:])
+relayer_path = os.path.join(os.path.dirname(os.path.realpath(__file__)))
+ret = subprocess.call('source {0}/venv/bin/activate && '
+                      'python {0}/relayer.py {1}'.format(relayer_path, safe_args),
+                      shell=True,
+                      executable='/bin/bash')
+
+sys.exit(0 if ret == 0 else 1)
