@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from setuptools import setup, find_packages
-from encodings import utf_8
-import re
 
 PACKAGE_NAME = "relayer"
 VERSION_FILE = PACKAGE_NAME + '/_version.py'
@@ -25,7 +23,6 @@ def version():
             if line.startswith('__version__'):
                 _, version = line.split('=')
                 return version.replace("'", '').strip()
-        
 
 def load_deps(file_name):
     """Load dependencies from requirements file"""
@@ -38,11 +35,10 @@ def load_deps(file_name):
             deps.append(line)
     return deps
 
-
 install_requires = load_deps('requirements.txt')
 tests_require = load_deps('dev-requirements.txt')
 
-with open("README.md", "r", encoding=utf_8) as fh:
+with open("README.md") as fh:
     long_description = fh.read()
 
 setup(
@@ -54,7 +50,7 @@ setup(
     author='Iguazio',
     author_email='moranb@iguazio.com',
     license='MIT',
-    url='https://github.com/v3io/v3iofs-py',
+    url='https://github.com/v3io/relayer',
     packages=find_packages(),
     install_requires=install_requires,
     classifiers=[
