@@ -2,17 +2,17 @@ import os
 import shutil
 from ruamel import yaml
 
-import tools.relayer.core
-import tools.relayer.clients.logging
+import relayer.core
+import relayer.clients.logging
 
 from twisted.trial import unittest
 
 
 class RelayerTestCase(unittest.TestCase):
-    _logger = tools.relayer.clients.logging.Client(
+    _logger = relayer.clients.logging.Client(
         "relayer",
         log_colors="always",
-        initial_severity=tools.relayer.clients.logging.Severity.Verbose,
+        initial_severity=relayer.clients.logging.Severity.Verbose,
     ).logger
 
     def setUp(self):
@@ -41,7 +41,7 @@ class RelayerTestCase(unittest.TestCase):
         )
         self._aux_config_dict = self._relayer_config_yml_to_dict(self._aux_file_path)
 
-        self._relayer = tools.relayer.core.Relayer(
+        self._relayer = relayer.core.Relayer(
             self._logger, self._modifiable_file_path
         )
 
