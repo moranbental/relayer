@@ -13,16 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from setuptools import setup, find_packages
+import re
 
 PACKAGE_NAME = "relayer"
 VERSION_FILE = PACKAGE_NAME + '/_version.py'
+VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
 
 def version():
     with open(VERSION_FILE) as fp:
         for line in fp:
             if line.startswith('__version__'):
-                _, version = line.split('=')
-                return version.replace("'", '').strip()
+                mo = re.search(VSRE, line, re.M)
+                if mo:
+                    return mo.group(1)
+                raise RuntimeError("Unable to find version string in %s." % (VERSION_FILE,))
 
 def load_deps(file_name):
     """Load dependencies from requirements file"""
@@ -36,7 +40,7 @@ def load_deps(file_name):
     return deps
 
 install_requires = load_deps('requirements.txt')
-tests_require = load_deps('dev-requirements.txt')
+tests_require = load_deps('requirements_dev.txt')
 
 with open("README.md") as fh:
     long_description = fh.read()
